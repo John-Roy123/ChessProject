@@ -19,7 +19,7 @@ public abstract class tile {
             final Map<Integer, emptyTile> emptyTileMap = new HashMap<>();
             //final because there is only 1 Map for board
 
-            for(int i = 0; i<64; i++){
+            for(int i = 0; i<BoardUtils.NUM_TILES; i++){
                 emptyTileMap.put(i, new emptyTile(i));
                 //creates all 64 tiles on a chess board with an assigned integer for each tile
             }
