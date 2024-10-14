@@ -1,6 +1,7 @@
 package Chess.Engine.Pieces;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import com.google.common.collect.ImmutableList;
@@ -20,7 +21,7 @@ public class Knight extends Piece{
     }
 
     @Override
-    public List<Move> calculateLegalMoves(Board board) {
+    public Collection<Move> calculateLegalMoves(Board board) {
 
         int destinationCoord;
         List<Move> legalMoves = new ArrayList<>();
@@ -32,6 +33,12 @@ public class Knight extends Piece{
             //sets destinationCoord to where piece is + where it wants to go
 
             if(BoardUtils.isValidCoordinate(destinationCoord)){
+
+            if(isFirstColumnExclusion(this.piecePosition, currentMove) || 
+            isSecondColumnExclusion(this.piecePosition, currentMove) || 
+            isSeventhColumnExclusion(this.piecePosition, currentMove) || 
+            isEighthColumnExclusion(this.piecePosition, destinationCoord)) continue;
+
             //checks if the destination is within bounds
                 final tile destinationTile = board.getTile(destinationCoord);
                 
@@ -55,8 +62,20 @@ public class Knight extends Piece{
         
     } 
     
+    private static boolean isSecondColumnExclusion(final int currentPosition, final int offSet){
+        return BoardUtils.SECOND_COLUMN[currentPosition] && ((offSet == -10) || (offSet == 6));
+    }
+
     private static boolean isFirstColumnExclusion(final int currentPosition, final int offSet){
-        BoardUtils.FIRST_COLUMN[currentPosition] && ((offSet == -17)|| (offSet == -10) || (offSet == 6) || offSet ==15);
+        return BoardUtils.FIRST_COLUMN[currentPosition] && ((offSet == -17) || (offSet == -10) || (offSet == 6) || offSet == 15);
+    }
+
+    private static boolean isSeventhColumnExclusion(final int currentPosition, final int offSet){
+        return BoardUtils.SEVENTH_COLUMN[currentPosition] && ((offSet == -6) || (offSet == 10));
+    }
+
+    private static boolean isEighthColumnExclusion(final int currentPosition, final int offSet){
+        return BoardUtils.EIGHTH_COLUMN[currentPosition] && ((offSet == -15) || (offSet == -6) || (offSet == 10) || (offSet == 17));
     }
 
 }

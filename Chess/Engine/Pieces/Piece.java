@@ -1,5 +1,6 @@
 package Chess.Engine.Pieces;
 
+import java.util.Collection;
 import java.util.List;
 
 import Chess.Engine.Team;
@@ -15,7 +16,7 @@ public abstract class Piece{
         this.pieceTeam = pieceTeam;
     }
 
-    public abstract List<Move> calculateLegalMoves(final Board board);
+    public abstract Collection<Move> calculateLegalMoves(final Board board);
 
     public Team getPieceTeam(){
         return this.pieceTeam;
