@@ -5,11 +5,12 @@ import java.util.Collection;
 import java.util.List;
 
 import com.google.common.collect.ImmutableList;
+
 import Chess.Engine.Team;
 import Chess.Engine.Board.Board;
+import Chess.Engine.Board.BoardUtils;
 import Chess.Engine.Board.Move;
 import Chess.Engine.Board.tile;
-import Chess.Engine.Board.BoardUtils;
 import Chess.Engine.Board.Move.MajorMove;
 import Chess.Engine.Board.Move.MajorMove.AttackMove;
 
@@ -59,7 +60,7 @@ public class Knight extends Piece{
 
         }
 
-        return ImmutableList.copyOf(legalMoves);
+        return legalMoves;
         
     } 
     

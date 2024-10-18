@@ -1,17 +1,18 @@
-package Chess.Engine.Pieces;
+package src.Chess.Engine.Pieces;
 
-import Chess.Engine.Board.Board;
-import Chess.Engine.Board.BoardUtils;
-import Chess.Engine.Board.Move;
-import Chess.Engine.Board.Move.MajorMove;
-import Chess.Engine.Board.Move.MajorMove.AttackMove;
-import Chess.Engine.Board.tile;
-import Chess.Engine.Team;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 import com.google.common.collect.ImmutableList;
+
+import Chess.Engine.Team;
+import Chess.Engine.Board.Board;
+import Chess.Engine.Board.BoardUtils;
+import Chess.Engine.Board.Move;
+import Chess.Engine.Board.tile;
+import Chess.Engine.Board.Move.MajorMove;
+import Chess.Engine.Board.Move.MajorMove.AttackMove;
 
 public class Bishop extends Piece{
 
@@ -58,7 +59,7 @@ public class Bishop extends Piece{
             }
         }
 
-        return ImmutableList.copyOf(legalMoves);
+        return legalMoves;
     }
     
     private static boolean isFirstColumnExclusion(final int currentPostition, final int offSet){

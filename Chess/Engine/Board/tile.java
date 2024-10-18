@@ -1,11 +1,8 @@
 package Chess.Engine.Board;
 
+import Chess.Engine.Pieces.Piece;
 import java.util.HashMap;
 import java.util.Map;
-
-import com.google.common.collect.ImmutableMap;
-
-import Chess.Engine.Pieces.Piece;
 
 public abstract class tile {
 
@@ -25,7 +22,7 @@ public abstract class tile {
             }
 
             //create an immutablemap of the emptyTileMap using the guava library to stick to the theme of immutability
-            return ImmutableMap.copyOf(emptyTileMap);
+            return emptyTileMap;
         }
 
     public static tile createTile(final int coord, final Piece piece){
