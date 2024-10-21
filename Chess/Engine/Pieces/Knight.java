@@ -18,7 +18,7 @@ public class Knight extends Piece{
 
     private final static int[] LEGAL_MOVES = {-17, -15, -10, -6, 6, 10, 15, 17};
 
-    Knight(int piecePosition, Team pieceTeam) {
+    public Knight(int piecePosition, Team pieceTeam) {
         super(piecePosition, pieceTeam);
     }
 
