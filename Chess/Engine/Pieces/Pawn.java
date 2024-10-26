@@ -66,5 +66,10 @@ public class Pawn extends Piece{
         // TODO Auto-generated method stub
         return legalMoves;
     }
+
+    @Override
+    public String toString(){
+        return Piece.PieceType.PAWN.toString();
+    }
     
 }

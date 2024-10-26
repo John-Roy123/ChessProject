@@ -30,6 +30,28 @@ public abstract class Piece{
         return this.pieceTeam;
     }
 
+    public enum PieceType{
+
+        PAWN("P"),
+        ROOK("R"),
+        KNIGHT("H"),
+        BISHOP("B"),
+        QUEEN("Q"),
+        KING("K");
+
+
+        private String pieceName;
+
+        PieceType(final String pieceName){
+            this.pieceName = pieceName;
+        }
+
+        @Override
+        public String toString(){
+            return this.pieceName;
+        }
+    }
+
     
 
 }

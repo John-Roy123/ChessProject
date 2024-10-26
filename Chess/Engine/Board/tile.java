@@ -36,6 +36,8 @@ public abstract class tile {
 
     
 
+    
+
     public abstract boolean isFull();
 
     public abstract Piece getPiece();
@@ -45,6 +47,10 @@ public abstract class tile {
             super(coord);
             
         }
+        @Override 
+    public String toString(){
+        return "-";
+    }
         @Override
         public boolean isFull(){
             return false;
@@ -66,6 +72,10 @@ public abstract class tile {
             super(coord);
             this.piece = piece;
             //sets this coordinate to have the correct piece
+        }
+        @Override 
+        public String toString(){
+            return getPiece().getPieceTeam().isBlack() ? getPiece().toString().toLowerCase() : getPiece().toString();
         }
         @Override
         public boolean isFull(){

@@ -1,24 +1,21 @@
 package Chess.Engine.Pieces;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
-import com.google.common.collect.ImmutableList;
-
-import Chess.Engine.Team;
 import Chess.Engine.Board.Board;
 import Chess.Engine.Board.BoardUtils;
 import Chess.Engine.Board.Move;
-import Chess.Engine.Board.tile;
 import Chess.Engine.Board.Move.MajorMove;
 import Chess.Engine.Board.Move.MajorMove.AttackMove;
+import Chess.Engine.Board.tile;
+import Chess.Engine.Team;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 public class Bishop extends Piece{
 
     private final static int[] MOVE_VECTOR_COORDINATES = {-9, -7, 7, 9};
 
-    public Bishop(int piecePosition, Team pieceTeam) {
+    public Bishop(final int piecePosition, Team pieceTeam) {
         super(piecePosition, pieceTeam);
     }
 
@@ -60,6 +57,11 @@ public class Bishop extends Piece{
         }
 
         return legalMoves;
+    }
+
+    @Override
+    public String toString(){
+        return Piece.PieceType.BISHOP.toString();
     }
     
     private static boolean isFirstColumnExclusion(final int currentPostition, final int offSet){

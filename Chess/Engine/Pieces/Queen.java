@@ -61,6 +61,11 @@ public class Queen extends Piece{
 
         return legalMoves;
     }
+
+    @Override
+    public String toString(){
+        return Piece.PieceType.QUEEN.toString();
+    }
     
     private static boolean isFirstColumnExclusion(final int currentPostition, final int offSet){
         return BoardUtils.FIRST_COLUMN[currentPostition] && (offSet == -9 || offSet == 7 || offSet == -1);
