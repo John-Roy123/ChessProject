@@ -4,7 +4,7 @@ import Chess.Engine.Board.Board;
 import Chess.Engine.Board.BoardUtils;
 import Chess.Engine.Board.Move;
 import Chess.Engine.Board.Move.MajorMove;
-import Chess.Engine.Board.Move.MajorMove.AttackMove;
+import Chess.Engine.Board.Move.AttackMove;
 import Chess.Engine.Board.tile;
 import Chess.Engine.Team;
 import java.util.ArrayList;
@@ -15,7 +15,7 @@ public class King extends Piece{
     final static int[] CANDIDATE_MOVE_COORD = {-9,-8,-7,-1,1,7,8,9};
 
     public King(final int piecePosition, Team pieceTeam) {
-        super(piecePosition, pieceTeam);
+        super(PieceType.KING,piecePosition, pieceTeam);
         //TODO Auto-generated constructor stub
     }
 

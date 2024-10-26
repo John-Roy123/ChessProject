@@ -6,11 +6,15 @@ import Chess.Engine.Team;
 import java.util.Collection;
 
 public abstract class Piece{
+
+    protected final PieceType pieceType;
     protected final int piecePosition;
     protected final Team pieceTeam;
     protected final boolean isFirstMove;
 
-    Piece(final int piecePosition, final Team pieceTeam){
+    Piece(final PieceType pieceType,
+        final int piecePosition, final Team pieceTeam){
+        this.pieceType = pieceType;
         this.piecePosition = piecePosition;
         this.pieceTeam = pieceTeam;
         this.isFirstMove = true;
@@ -30,14 +34,54 @@ public abstract class Piece{
         return this.pieceTeam;
     }
 
+    public PieceType getPieceType(){
+        return this.pieceType;
+    }
+
     public enum PieceType{
 
-        PAWN("P"),
-        ROOK("R"),
-        KNIGHT("H"),
-        BISHOP("B"),
-        QUEEN("Q"),
-        KING("K");
+        PAWN("P") {
+            @Override
+            public boolean isKing() {
+                // TODO Auto-generated method stub
+                return false;
+            }
+        },
+        ROOK("R"){
+            @Override
+            public boolean isKing() {
+                // TODO Auto-generated method stub
+                return false;
+            }
+        },
+        KNIGHT("H"){
+            @Override
+            public boolean isKing() {
+                // TODO Auto-generated method stub
+                return false;
+            }
+        },
+        BISHOP("B"){
+            @Override
+            public boolean isKing() {
+                // TODO Auto-generated method stub
+                return false;
+            }
+        },
+        QUEEN("Q"){
+            @Override
+            public boolean isKing() {
+                // TODO Auto-generated method stub
+                return false;
+            }
+        },
+        KING("K"){
+            @Override
+            public boolean isKing() {
+                // TODO Auto-generated method stub
+                return true;
+            }
+        };
 
 
         private String pieceName;
@@ -50,6 +94,8 @@ public abstract class Piece{
         public String toString(){
             return this.pieceName;
         }
+
+        public abstract boolean isKing();
     }
 
     

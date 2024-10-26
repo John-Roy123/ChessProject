@@ -4,7 +4,7 @@ import Chess.Engine.Board.Board;
 import Chess.Engine.Board.BoardUtils;
 import Chess.Engine.Board.Move;
 import Chess.Engine.Board.Move.MajorMove;
-import Chess.Engine.Board.Move.MajorMove.AttackMove;
+import Chess.Engine.Board.Move.AttackMove;
 import Chess.Engine.Board.tile;
 import Chess.Engine.Team;
 
@@ -19,7 +19,7 @@ public class Queen extends Piece{
     private final static int[] MOVE_VECTOR_COORDINATES = {-9, -8, -7, -1, 1, 7, 8, 9};
 
     public Queen(int piecePosition, Team pieceTeam) {
-        super(piecePosition, pieceTeam);
+        super(PieceType.QUEEN,piecePosition, pieceTeam);
     }
 
     @Override

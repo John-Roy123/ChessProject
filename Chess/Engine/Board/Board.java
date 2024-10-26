@@ -1,6 +1,9 @@
 package Chess.Engine.Board;
 
 import Chess.Engine.Pieces.*;
+import Chess.Engine.Player.BlackPlayer;
+import Chess.Engine.Player.Player;
+import Chess.Engine.Player.WhitePlayer;
 import Chess.Engine.Team;
 
 import java.util.List;
@@ -16,6 +19,11 @@ public class Board {
     private final Collection<Piece> whitePieces;
     private final Collection<Piece> blackPieces;
 
+    private final WhitePlayer whitePlayer;
+    private final BlackPlayer blackPlayer;
+
+    private final Player currentPlayer;
+
     private Board(Builder builder){ 
         this.gameBoard = createBoard(builder);
         this.whitePieces = determineActivePieces(this.gameBoard, Team.WHITE);
@@ -23,6 +31,21 @@ public class Board {
 
         final Collection<Move> whiteLegalMoves = calculateLegalMoves(this.whitePieces);
         final Collection<Move> blackLegalMoves = calculateLegalMoves(this.blackPieces);
+
+        this.whitePlayer = new WhitePlayer(this, whiteLegalMoves, blackLegalMoves);
+        this.blackPlayer = new BlackPlayer(this, blackLegalMoves, whiteLegalMoves);
+        this.currentPlayer = builder.currentTurn.choosePlayer(this.whitePlayer, this.blackPlayer);
+    }
+
+    public Player whitePlayer(){
+        return this.whitePlayer;
+    }
+    public Player blackPlayer(){
+        return this.blackPlayer;
+    }
+
+    public Player currentPlayer(){
+        return this.currentPlayer;
     }
 
     @Override
@@ -36,6 +59,14 @@ public class Board {
             }
         }
         return sb.toString();
+    }
+
+    public Collection<Piece> getBlackPieces(){
+        return this.blackPieces;
+    }
+
+    public Collection<Piece> getWhitePieces(){
+        return this.whitePieces;
     }
 
 

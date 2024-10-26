@@ -1,5 +1,7 @@
 package Chess.Engine;
 
+import Chess.Engine.Player.*;
+
 public enum Team {
     WHITE
  {
@@ -19,6 +21,10 @@ public enum Team {
         public boolean isBlack() {
             // TODO Auto-generated method stub
             return false;
+        }
+        @Override
+        public Player choosePlayer(final WhitePlayer whitePlayer, final BlackPlayer blackPlayer){
+            return whitePlayer;
         }
     },  
     BLACK
@@ -40,8 +46,14 @@ public enum Team {
             // TODO Auto-generated method stub
             return true;
         }
+        @Override
+        public Player choosePlayer(final WhitePlayer whitePlayer, final BlackPlayer blackPlayer){
+            return blackPlayer;
+        }
     };
    public abstract int getDirection();
    public abstract boolean isWhite();
    public abstract boolean isBlack();
+   public abstract Player choosePlayer(WhitePlayer whitePlayer, BlackPlayer blackPlayer);
+   
 }
