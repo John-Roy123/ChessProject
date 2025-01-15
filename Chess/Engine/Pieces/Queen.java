@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import com.google.common.collect.ImmutableList;
+//import com.google.common.collect.ImmutableList;
 
 public class Queen extends Piece{
 
@@ -20,6 +20,11 @@ public class Queen extends Piece{
 
     public Queen(int piecePosition, Team pieceTeam) {
         super(PieceType.QUEEN,piecePosition, pieceTeam);
+    }
+
+    @Override
+    public Queen movePiece(final Move move){
+        return new Queen(move.getDestination(), move.getMovedPiece().getPieceTeam());
     }
 
     @Override

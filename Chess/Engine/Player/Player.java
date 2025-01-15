@@ -7,6 +7,8 @@ import java.util.Collection;
 import java.util.List;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
+
 import java.util.ArrayList;
 
 public abstract class Player {
@@ -22,7 +24,7 @@ public abstract class Player {
     Player(final Board board, final Collection<Move> legalMoves, final Collection<Move> oppMoves){
         this.board = board;
         this.playerKing = confirmKing();
-        this.legalMoves = legalMoves;
+        this.legalMoves = ImmutableList.copyOf(Iterables.concat(legalMoves, calculateKingCastles(legalMoves, oppMoves)));
         this.isInCheck = !Player.calculateAttacksOnTile(this.playerKing.getPiecePosition(), oppMoves).isEmpty();
     }
 
@@ -34,14 +36,14 @@ public abstract class Player {
         return this.playerKing;
     }
 
-    private static Collection<Move> calculateAttacksOnTile(int piecePosition, Collection<Move> oppMoves){
+    protected static Collection<Move> calculateAttacksOnTile(int piecePosition, Collection<Move> oppMoves){
         final List<Move> attackMoves = new ArrayList<>();
         for(final Move move : oppMoves){
             if(piecePosition == move.getDestination()){
                 attackMoves.add(move);
             }
         }
-        return ImmutableList.copyOf(attackMoves);
+        return attackMoves;
     }
     
     protected boolean canEscape(){
@@ -103,5 +105,6 @@ public abstract class Player {
     public abstract Collection<Piece> getActivePieces();
     public abstract Team getTeam();
     public abstract Player getOpponent();
+    protected abstract Collection<Move> calculateKingCastles(Collection<Move> playerLegals, Collection<Move> opponentLegals);
 
 }

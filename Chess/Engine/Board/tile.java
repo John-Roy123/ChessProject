@@ -34,6 +34,10 @@ public abstract class tile {
         this.coord = coord;
     }
 
+    public int getTileCoordinate(){
+        return this.coord;
+    }
+
     
 
     

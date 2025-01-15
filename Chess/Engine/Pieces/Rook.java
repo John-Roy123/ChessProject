@@ -20,6 +20,12 @@ public class Rook extends Piece{
     public Rook(int piecePosition, Team pieceTeam) {
         super(PieceType.ROOK,piecePosition, pieceTeam);
     }
+
+    @Override
+    public Rook movePiece(final Move move){
+        return new Rook(move.getDestination(), move.getMovedPiece().getPieceTeam());
+    }
+
     @Override
     public Collection<Move> calculateLegalMoves(final Board board) {
         int destinationCoord;

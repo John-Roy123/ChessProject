@@ -19,6 +19,11 @@ public class Pawn extends Piece{
     }
 
     @Override
+    public Pawn movePiece(final Move move){
+        return new Pawn(move.getDestination(), move.getMovedPiece().getPieceTeam());
+    }
+
+    @Override
     public Collection<Move> calculateLegalMoves(Board board) {
 
         final List<Move> legalMoves = new ArrayList<>();
