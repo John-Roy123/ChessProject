@@ -1,23 +1,31 @@
 package com.john.chess;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.john.chess.Engine.Board.Board;
 import com.john.chess.Engine.Board.Move;
+import com.john.chess.Engine.Pieces.Piece;
 import com.john.chess.Engine.Player.MoveTransition;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
 public class ChessRestController {
 
     private Board board;
+    private String currBoard;
 
-
-
+    @GetMapping("/boardstate")
+    public String getBoardState() {
+            System.out.println("Current Board to string: " + currBoard);
+            return currBoard;
+    }
 
     @PostMapping("/message")
     public ResponseEntity<String> receiveMessage(@RequestBody MessageRequest msgReq){
@@ -45,6 +53,7 @@ public class ChessRestController {
             board = transition.getTransitionBoard();
         }
 
+        currBoard = board.getBoardState();
         System.out.println(board);
 
     return ResponseEntity.ok("Message Received Successfully");

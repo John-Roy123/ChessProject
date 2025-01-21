@@ -14,9 +14,12 @@ import java.util.List;
 public class Bishop extends Piece{
 
     private final static int[] MOVE_VECTOR_COORDINATES = {-9, -7, 7, 9};
+    private Team pieceTeam;
 
     public Bishop(final int piecePosition, Team pieceTeam) {
+
         super(PieceType.BISHOP,piecePosition, pieceTeam);
+        this.pieceTeam = pieceTeam;
     }
 
     @Override
@@ -48,12 +51,14 @@ public class Bishop extends Piece{
                     legalMoves.add(new MajorMove(board, this, destinationCoord));
                     //checks if destination already has a piece, and it not then moves piece to tile
 
-                }else{
+                }else if (destinationTile.isFull()){
                     final Piece pieceOnTile = destinationTile.getPiece();
                     final Team pieceTeam = pieceOnTile.getPieceTeam();
 
-                    if(this.pieceTeam != pieceTeam) legalMoves.add(new AttackMove(board, this, destinationCoord, pieceOnTile));
-                    
+                    if(this.pieceTeam != pieceTeam) {
+                        legalMoves.add(new AttackMove(board, this, destinationCoord, pieceOnTile));
+                        System.out.println("Creating attack move at position: " + destinationCoord + " for bishop");
+                    }
                     break;
                 }
                 

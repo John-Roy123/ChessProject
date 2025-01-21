@@ -54,8 +54,8 @@ let startPositionId
 let draggedElement
 let pieceOnTile
 let draggedElementName
-let moveConfirmed
 let pieceTeam
+let boardState
 
 function dragStart(e) {
     startPositionId = e.target.parentNode.getAttribute('square-id')
@@ -68,16 +68,12 @@ function dragOver(e){
     e.preventDefault()
 }
 
-function dragDrop(e){
+async function dragDrop(e){
     e.stopPropagation()
-
 
     let targetTile = e.currentTarget.getAttribute("square-id")
 
-
-
-        pieceOnTile = !(e.target.parentNode.getAttribute("id") == "chessboard") ? e.currentTarget.firstChild.getAttribute("id") : "empty"
-
+    pieceOnTile = !(e.target.parentNode.getAttribute("id") == "chessboard") ? e.currentTarget.firstChild.getAttribute("id") : "empty"
     pieceTeam = draggedElement.firstChild.classList.contains('white') ? 'white' : 'black'
 
     console.log(pieceTeam)
@@ -86,41 +82,102 @@ function dragDrop(e){
     console.log(pieceOnTile)
     console.log(e.target.parentNode.classList)
 
-    if((e.target.parentNode.classList.contains('black') && pieceTeam == 'black') || (e.target.parentNode.classList.contains('white') && pieceTeam == 'white') || e.target.parentNode.classList.contains('piece')){
-        return;
-    }
 
     if(pieceOnTile != 'empty') {
         e.target.parentNode.remove(pieceOnTile)
-
-    }
-    else{
+    } else {
         e.target.append(draggedElement)
     }
 
+    try {
+        // Send the move to the server
+        await fetch('http://localhost:8080/api/message', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                draggedElementName: draggedElementName,
+                startPositionId: startPositionId,
+                pieceOnTile: pieceOnTile,
+                targetTile: targetTile,
+                pieceTeam: pieceTeam
+            })
+        });
+
+        // Fetch the updated board state after the move
+        await fetchBoard();  // Wait for the board state to be updated
+        console.log(boardState);  // Now the boardState should be updated
 
 
+        // Optional: Additional logic to confirm if the move is legal
+        await updateBoard();
 
-    fetch('http://localhost:8080/api/message', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({draggedElementName: draggedElementName,
-            startPositionId: startPositionId, pieceOnTile: pieceOnTile, targetTile: targetTile, pieceTeam: pieceTeam})  // Send message as JSON
-    })
-        .then(response => response.json())
-        .then(data => console.log('Response from server:', data))
-        .catch(error => console.error('Error:', error));
+    } catch (error) {
+        console.error('Error handling move:', error);
+    }
+}
 
+async function updateBoard(){
+    boardState.split("")
+    const allTiles = document.querySelectorAll("#chessboard .square")
 
+    allTiles.forEach((square, i) =>{
 
-        moveConfirmed = true
-        //TODO have Java server confirm whether or not the move is legal
-        if(moveConfirmed){
+        let team = (boardState[i] === boardState[i].toString().toLowerCase()) && boardState[i] !== '-' ? 'black' : 'white'
 
+        switch(boardState[i].toString().toLowerCase()){
+            case 'p':
+                square.innerHTML = pawn
+                break;
+
+            case 'r':
+                square.innerHTML = rook
+                break;
+            case 'b':
+                square.innerHTML = bishop
+                break;
+
+            case 'h':
+                square.innerHTML = knight
+                break;
+            case 'q':
+                square.innerHTML = queen
+                break;
+
+            case 'k':
+                square.innerHTML = king
+                break;
+            case '-':
+                square.innerHTML = ""
+                break;
         }
 
+        square.firstChild?.setAttribute('draggable', true)
+
+        if(boardState[i] != '-') {
+            if (team == 'white') {
+                square.firstChild.classList.add('white')
+                console.log(square.firstChild)
+            } else {
+                square.firstChild.firstChild.classList.add('black')
+            }
+        }
+
+        // childElement.innerHTML(boardState[i])
+    })
+}
+
+async function fetchBoard(){
+    try{
+        const response = await fetch('/api/boardstate')
+        if(!response.ok){
+            throw new Error('Failed to fetch board state')
+        }
+        boardState = await response.text()
+    } catch(error){
+        console.error('Error fetching message', error)
+    }
 }
 
 const allTiles = document.querySelectorAll("#chessboard .square")

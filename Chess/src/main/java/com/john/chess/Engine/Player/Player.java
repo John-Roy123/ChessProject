@@ -91,7 +91,6 @@ public abstract class Player {
 
     private King confirmKing(){
         for (final Piece piece : getActivePieces()){
-            System.out.println("Checking " + piece.getPieceType());
             if(piece.getPieceType().isKing()){
                 return (King) piece;
             }

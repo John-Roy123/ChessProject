@@ -13,7 +13,6 @@ import com.google.common.collect.Iterables;
 
 public class Board {
 
-    private final Map<Integer, Piece> gameState = new HashMap<>();
     private final List<tile> gameBoard;
     private final Collection<Piece> whitePieces;
     private final Collection<Piece> blackPieces;
@@ -22,6 +21,7 @@ public class Board {
     private final BlackPlayer blackPlayer;
 
     private final Player currentPlayer;
+    //private static Builder builder;
 
     private Board(Builder builder){
         this.gameBoard = createBoard(builder);
@@ -68,6 +68,14 @@ public class Board {
         return this.whitePieces;
     }
 
+
+    public String getBoardState(){
+        StringBuilder boardToString = new StringBuilder();
+        for(int i = 0; i < BoardUtils.NUM_TILES; i++){
+            boardToString.append(gameBoard.get(i).toString());
+        }
+        return boardToString.toString();
+    }
 
     //Method to determine what moves are legal for a given team
     private Collection<Move> calculateLegalMoves(Collection<Piece> pieces){
