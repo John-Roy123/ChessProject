@@ -1,41 +1,71 @@
 package com.john.chess;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.john.chess.Engine.Board.Board;
 import com.john.chess.Engine.Board.Move;
+import com.john.chess.Engine.Pieces.Piece;
 import com.john.chess.Engine.Player.MoveTransition;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
 public class ChessRestController {
 
-    Board board = ChessApplication.getChessboard();
+    private boolean checked = false;
+    private Board board;
+    private String currBoard;
+
+    @GetMapping("/boardstate")
+    public String getBoardState() {
+            System.out.println("Current Board to string: " + currBoard);
+            return currBoard;
+    }
+    @GetMapping("/checked")
+    public boolean isChecked() {
+        return checked;
+    }
+
+    public void createBoard(){
+        board = Board.createStartBoard();
+    }
 
     @PostMapping("/message")
     public ResponseEntity<String> receiveMessage(@RequestBody MessageRequest msgReq){
+
+
     String message = MessageRequest.getMessage();
     String pieceName = MessageRequest.getDraggedElementName();
     int startTile = MessageRequest.getStartPositionId();
     int endTile = MessageRequest.getTargetTile();
     String pieceOnTile = MessageRequest.getPieceOnTile();
+    String pieceTeam = MessageRequest.getPieceTeam();
+    boolean gameReset = MessageRequest.getGameReset();
+
+        if(board == null || gameReset){
+            createBoard();
+        }
 
     //System.out.println(message);
     System.out.println(pieceName + " from tile: " + startTile + " moved to tile: " + endTile + " tile is currently occupied by: " + pieceOnTile);
+    System.out.println(pieceTeam);
 
-    System.out.println(board);
+
 
     final Move move = Move.MoveFactory.createMove(board, startTile, endTile);
     final MoveTransition transition = board.currentPlayer().makeMove(move);
         if(transition.getMoveStatus().isDone()){
             board = transition.getTransitionBoard();
         }
-
-
+        currBoard = board.getBoardState();
+        System.out.println(board);
+        checked = board.currentPlayer().isChecked();
     return ResponseEntity.ok("Message Received Successfully");
     }
 
@@ -44,20 +74,24 @@ public class ChessRestController {
 }
 
 
-
-
-
 class MessageRequest{
     private static String pieceOnTile;
     private static int targetTile;
     private static String message;
     private static int startPositionId;
     private static String draggedElementName;
+    private static String pieceTeam;
+    private static boolean gameReset;
+
+    public static boolean getGameReset(){return gameReset;}
+    public void setGameReset(boolean gameReset){this.gameReset = gameReset;}
+
+    public static String getPieceTeam() {return pieceTeam; }
+    public void setPieceTeam(String pieceTeam) {this.pieceTeam = pieceTeam; }
 
     public static String getMessage() {
         return message;
     }
-
     public void setMessage(String message) {
         this.message = message;
     }
@@ -68,18 +102,21 @@ class MessageRequest{
     public void setDraggedElementName(String pieceName) {
         this.draggedElementName = pieceName;
     }
+
     public static int getStartPositionId() {
         return startPositionId;
     }
     public void setStartPositionId(int startPositionId) {
         this.startPositionId = startPositionId;
     }
+
     public static int getTargetTile() {
         return targetTile;
     }
     public void setTargetTile(int endTile) {
         this.targetTile = endTile;
     }
+
     public static String getPieceOnTile() {
         return pieceOnTile;
     }

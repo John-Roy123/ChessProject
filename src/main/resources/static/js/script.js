@@ -8,7 +8,22 @@ const pawn = '<div class = "piece" id="pawn"><svg xmlns="http://www.w3.org/2000/
 const chessBoard = document.querySelector("#chessboard")
 const playerDisplay = document.querySelector("#player")
 const infoDisplay = document.querySelector("#info-display")
-const width = 8;
+const moveAudio = new Audio('js/move.mp3')
+const capAudio = new Audio('js/capture.mp3')
+const checkAudio = new Audio('js/check.mp3')
+//sound effects from chess.com
+
+
+const resetButton = document.getElementById('newGame')
+
+let startPositionId
+let draggedElement
+let pieceOnTile
+let draggedElementName
+let pieceTeam
+let boardState
+let gameReset
+let checked
 
 const startPieces = [
     rook, knight, bishop, queen, king, bishop, knight, rook,
@@ -20,6 +35,8 @@ const startPieces = [
     pawn, pawn, pawn,pawn,pawn,pawn,pawn,pawn,
     rook, knight, bishop, queen, king, bishop, knight, rook,
 ]
+
+resetButton.classList.add('button')
 
 function createBoard(){
     startPieces.forEach((startPiece, i)=>{
@@ -48,12 +65,26 @@ function createBoard(){
         chessBoard.append(square)
     })
 }
+
 createBoard()
 
-let startPositionId 
-let draggedElement
-let pieceOnTile
-let draggedElementName
+
+resetButton.addEventListener('click', () => {
+    gameReset = true;
+    const allTiles = document.querySelectorAll("#chessboard .square")
+    allTiles.forEach((square, i) => {
+        square.innerHTML = startPieces[i]
+        square.firstChild?.setAttribute('draggable', true)
+        if( i<= 15 ){
+            square.firstChild.firstChild.classList.add('black');
+        }
+        if(i >= 48){
+            square.firstChild.firstChild.classList.add('white');
+        }
+    })
+})
+
+
 
 function dragStart(e) {
     startPositionId = e.target.parentNode.getAttribute('square-id')
@@ -66,32 +97,139 @@ function dragOver(e){
     e.preventDefault()
 }
 
-function dragDrop(e){
+
+async function dragDrop(e){
     e.stopPropagation()
-    e.target.append(draggedElement)
 
     let targetTile = e.currentTarget.getAttribute("square-id")
 
-        pieceOnTile = !(e.target.parentNode.getAttribute("id") == "chessboard") ? e.currentTarget.firstChild.getAttribute("id") : "empty"
+    pieceOnTile = !(e.target.parentNode.getAttribute("id") == "chessboard") ? e.currentTarget.firstChild.getAttribute("id") : "empty"
+    pieceTeam = draggedElement.firstChild.classList.contains('white') ? 'white' : 'black'
 
-
-
+    console.log(pieceTeam)
     console.log(e.target.parentNode.getAttribute("id"))
     console.log(targetTile)
     console.log(pieceOnTile)
+    console.log(e.target.parentNode.classList)
 
-    fetch('http://localhost:8080/api/message', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({draggedElementName: draggedElementName,
-            startPositionId: startPositionId, pieceOnTile: pieceOnTile, targetTile: targetTile})  // Send message as JSON
+
+    if(pieceOnTile != 'empty') {
+        e.target.parentNode.remove(pieceOnTile)
+    } else {
+        e.target.append(draggedElement)
+    }
+
+    try {
+
+        await fetch('http://localhost:8080/api/message', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                draggedElementName: draggedElementName,
+                startPositionId: startPositionId,
+                pieceOnTile: pieceOnTile,
+                targetTile: targetTile,
+                pieceTeam: pieceTeam,
+                gameReset: gameReset
+            })
+        });
+        gameReset = false;
+
+        await fetchBoard();
+        console.log(boardState);
+        await isChecked();
+
+
+        await updateBoard();
+
+    } catch (error) {
+        console.error('Error handling move:', error);
+    }
+}
+
+async function updateBoard(){
+    boardState.split("")
+    if(checked == 'false') {
+        if (pieceOnTile == 'empty')
+            moveAudio.play()
+        else capAudio.play()
+    }
+    else{
+        checkAudio.play()
+    }
+    const allTiles = document.querySelectorAll("#chessboard .square")
+
+    allTiles.forEach((square, i) =>{
+
+        let team = (boardState[i] === boardState[i].toString().toLowerCase()) && boardState[i] !== '-' ? 'black' : 'white'
+
+        switch(boardState[i].toString().toLowerCase()){
+            case 'p':
+                square.innerHTML = pawn
+                break;
+
+            case 'r':
+                square.innerHTML = rook
+                break;
+            case 'b':
+                square.innerHTML = bishop
+                break;
+
+            case 'h':
+                square.innerHTML = knight
+                break;
+            case 'q':
+                square.innerHTML = queen
+                break;
+
+            case 'k':
+                square.innerHTML = king
+                break;
+            case '-':
+                square.innerHTML = ""
+                break;
+        }
+
+        square.firstChild?.setAttribute('draggable', true)
+
+        if(boardState[i] != '-') {
+            if (team == 'white') {
+                square.firstChild.classList.add('white')
+                console.log(square.firstChild)
+            } else {
+                square.firstChild.firstChild.classList.add('black')
+            }
+        }
+
+        // childElement.innerHTML(boardState[i])
     })
-        .then(response => response.json())
-        .then(data => console.log('Response from server:', data))
-        .catch(error => console.error('Error:', error));
+}
 
+async function isChecked(){
+    try{
+        const response = await fetch('/api/checked')
+        if(!response.ok){
+            throw new Error('Failed to fetch check status')
+        }
+         checked = await response.text();
+            console.log(checked)
+    } catch(error){
+        console.error('Error fetching message', error)
+    }
+}
+
+async function fetchBoard(){
+    try{
+        const response = await fetch('/api/boardstate')
+        if(!response.ok){
+            throw new Error('Failed to fetch board state')
+        }
+        boardState = await response.text()
+    } catch(error){
+        console.error('Error fetching message', error)
+    }
 }
 
 const allTiles = document.querySelectorAll("#chessboard .square")
@@ -100,4 +238,6 @@ allTiles.forEach(square => {
     square.addEventListener('dragover', dragOver)
     square.addEventListener('drop', dragDrop)
 })
+
+
 

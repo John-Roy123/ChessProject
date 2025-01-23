@@ -1,21 +1,29 @@
 #chessboard {
-    width: 320px;
-    height: 320px;
+    margin: auto;
+    padding: 10px;
+    width: 480px;
+    height: 480px;
     display: flex;
     flex-wrap: wrap;
 
   }
+
+.button{
+  margin: auto;
+  padding: 4px;
+  display: flex;
+}
   
   .square {
-    width: 40px;
-    height: 40px;
+    width: 60px;
+    height: 60px;
   }
   
   
   
 .square svg{
-  height: 36px;
-  width: 36px;
+  height: 56px;
+  width: 56px;
   margin: 2px;
   position: relative;
   z-index: -9

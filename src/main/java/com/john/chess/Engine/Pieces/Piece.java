@@ -8,7 +8,7 @@ import java.util.Collection;
 public abstract class Piece{
 
     protected final PieceType pieceType;
-    protected final int piecePosition;
+    protected int piecePosition;
     protected final Team pieceTeam;
     protected final boolean isFirstMove;
     private final int cachedHashCode;
@@ -39,8 +39,8 @@ public abstract class Piece{
             return false;
         }
         final Piece otherPiece = (Piece) other;
-        return  piecePosition == otherPiece.getPiecePosition() && pieceType == otherPiece.getPieceType() && 
-                pieceTeam == otherPiece.getPieceTeam() && isFirstMove == otherPiece.isFirstMove();
+        return  this.piecePosition == otherPiece.getPiecePosition() && this.pieceType == otherPiece.getPieceType() &&
+                this.pieceTeam == otherPiece.getPieceTeam() && this.isFirstMove == otherPiece.isFirstMove();
     }
     @Override
     public int hashCode(){
@@ -50,6 +50,8 @@ public abstract class Piece{
     public int getPiecePosition(){
         return this.piecePosition;
     }
+
+    public void setPiecePosition(int piecePosition){ this.piecePosition = piecePosition;}
 
     public boolean isFirstMove(){
         return this.isFirstMove;

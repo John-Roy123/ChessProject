@@ -38,9 +38,9 @@ public class Knight extends Piece{
 
             if(BoardUtils.isValidCoordinate(destinationCoord)){
 
-            if(isFirstColumnExclusion(this.piecePosition, currentMove) || 
-            isSecondColumnExclusion(this.piecePosition, currentMove) || 
-            isSeventhColumnExclusion(this.piecePosition, currentMove) || 
+            if(isFirstColumnExclusion(this.piecePosition, currentMove) ||
+            isSecondColumnExclusion(this.piecePosition, currentMove) ||
+            isSeventhColumnExclusion(this.piecePosition, currentMove) ||
             isEighthColumnExclusion(this.piecePosition, destinationCoord)) continue;
 
             //checks if the destination is within bounds
@@ -53,10 +53,10 @@ public class Knight extends Piece{
                 }else{
                     final Piece pieceOnTile = destinationTile.getPiece();
                     final Team pieceTeam = pieceOnTile.getPieceTeam();
-
                     if(this.pieceTeam != pieceTeam){
                         legalMoves.add(new AttackMove(board, this, destinationCoord, pieceOnTile));
                     }
+
                 }
             }
 

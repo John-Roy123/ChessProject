@@ -33,7 +33,7 @@ private static boolean[] initColumn(int columnNumber){
 }
 
 private BoardUtils(){
-    throw new RuntimeException("This class cannot be instatiated");
+    throw new RuntimeException("This class cannot be instantiated");
 }
 
 public static boolean isValidCoordinate(int coordinate){

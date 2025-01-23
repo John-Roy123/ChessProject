@@ -5,6 +5,8 @@ import com.john.chess.Engine.Pieces.Piece;
 import com.john.chess.Engine.Pieces.Rook;
 import com.john.chess.Engine.Board.Board.Builder;
 
+import java.util.Collection;
+
 public abstract class Move {
 
         final Board board;
@@ -68,6 +70,10 @@ public abstract class Move {
                 if(!this.movedPiece.equals(piece)){
                     builder.setPiece(piece);
                 }
+
+            }
+            for(final Piece piece : this.board.currentPlayer().getOpponent().getActivePieces()){
+                builder.setPiece(piece);
             }
             builder.setPiece(this.movedPiece.movePiece(this));
             builder.setMover(this.board.currentPlayer().getOpponent().getTeam());
@@ -79,30 +85,36 @@ public abstract class Move {
         public MajorMove(Board board, Piece movedPiece, int destination) {
             super(board, movedPiece, destination);
         }
+        @Override
+        public boolean equals(final Object other){
+            return this == other || other instanceof MajorMove && super.equals(other);
+        }
     }
             
     public static class AttackMove extends Move{
                 final Piece attackedPiece;
+
                 public AttackMove(Board board, Piece movedPiece, int destination, Piece attackedPiece) {
                     super(board, movedPiece, destination);
                     this.attackedPiece = attackedPiece;
                 }
                 @Override
                 public Board execute(){
-
                     final Builder builder = new Builder();
+
+                    for(final Piece piece : this.board.currentPlayer().getOpponent().getActivePieces()){
+                        if(!piece.equals(attackedPiece))
+                            builder.setPiece(piece);
+                        }
+
                     for(final Piece piece : this.board.currentPlayer().getActivePieces()){
-                        //TODO make an equals method in Piece
                         if(!this.movedPiece.equals(piece)){
                             builder.setPiece(piece);
                         }
                     }
-
-                    for(final Piece piece : this.board.currentPlayer().getOpponent().getActivePieces()){
-                        builder.setPiece(piece);
-                    }
-                    builder.setPiece(null); //This will move the moved piece
+                    builder.setPiece(this.movedPiece.movePiece(this));
                     builder.setMover(this.board.currentPlayer().getOpponent().getTeam()); //Changes the mover to the other team (opponent of current)
+
                     return builder.build();
                 }
 
@@ -135,6 +147,7 @@ public abstract class Move {
         //Pawn-related moves
         public static final class PawnMove extends Move{
             public PawnMove(Board board, Piece movedPiece, int destination) {
+
                 super(board, movedPiece, destination);
             }
         }
@@ -165,10 +178,34 @@ public abstract class Move {
             public PawnAttackMove(Board board, Piece movedPiece, int destination, final Piece attackedPiece) {
                 super(board, movedPiece, destination, attackedPiece);
             }
+            @Override
+            public boolean equals(final Object other){
+                return this == other || other instanceof PawnAttackMove && super.equals(other);
+            }
+
         }
         public static final class EnPassantAttackMove extends PawnAttackMove{
             public EnPassantAttackMove(Board board, Piece movedPiece, int destination, final Piece attackedPiece) {
                 super(board, movedPiece, destination, attackedPiece);
+            }
+            @Override
+            public boolean equals(final Object other){
+                return this == other || other instanceof EnPassantAttackMove && super.equals(other);
+            }
+            @Override
+            public Board execute(){
+                final Builder builder = new Builder();
+                for(final Piece piece : this.board.currentPlayer().getActivePieces()){
+                    if(!this.movedPiece.equals(piece)){
+                        builder.setPiece(piece);
+                    }
+                }
+                for (final Piece piece : this.board.currentPlayer().getOpponent().getActivePieces()){
+                    builder.setPiece(piece);
+                }
+                builder.setPiece(this.movedPiece.movePiece(this));
+                builder.setMover(this.board.currentPlayer().getOpponent().getTeam());
+                return builder.build();
             }
         }
 
@@ -195,6 +232,7 @@ public abstract class Move {
                 // TODO Auto-generated method stub
                 return true;
             }
+
             @Override
             public Board execute(){
                 final Builder builder = new Builder();
@@ -252,9 +290,8 @@ public abstract class Move {
             }
 
             public static Move createMove(final Board board, final int currentCoordinate, final int destinationCoordinate){
-                for(final Move move : board.getAllLegalMoves()){
-                    if(move.getCurrentCoord() == currentCoordinate &&
-                    move.getDestination() == destinationCoordinate){
+                for(Move move : board.getAllLegalMoves()){
+                    if(move.getCurrentCoord() == currentCoordinate && move.getDestination() == destinationCoordinate){
                         return move;
                     }
                 }

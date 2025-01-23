@@ -91,12 +91,12 @@ public abstract class Player {
 
     private King confirmKing(){
         for (final Piece piece : getActivePieces()){
-            System.out.println("Checking " + piece.getPieceType());
             if(piece.getPieceType().isKing()){
                 return (King) piece;
             }
         }
-        throw new RuntimeException("King is missing - Should not happen");
+        String boardState = board.toString();
+        throw new RuntimeException("King is missing - Should not happen, board state: \n" + boardState);
     }
 
     public boolean isMoveLegal(final Move move){

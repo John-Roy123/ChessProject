@@ -48,8 +48,8 @@ public class WhitePlayer extends Player {
                     if(Player.calculateAttacksOnTile(61, opponentLegals).isEmpty() && Player.calculateAttacksOnTile(62, opponentLegals).isEmpty() 
                     && rookTile.getPiece() instanceof Rook) //instanceof Rook may be error
                         kingCastles.add(new Move.KingSideCastle(
-                            this.board, this.playerKing, 
-                            62, (Rook)rookTile.getPiece(), 
+                            this.board, this.playerKing,
+                            62, (Rook)rookTile.getPiece(),
                             rookTile.getTileCoordinate(), 61));
                 }
             }

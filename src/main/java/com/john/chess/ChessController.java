@@ -1,5 +1,6 @@
 package com.john.chess;
 
+import com.john.chess.Engine.Board.Board;
 import com.john.chess.Engine.Board.Move;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -11,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class ChessController {
+
+    public static Board board;
 
     @RequestMapping("/greeting")
     public String greeting(@RequestParam(name="name", required = false, defaultValue="World") String name, Model model){

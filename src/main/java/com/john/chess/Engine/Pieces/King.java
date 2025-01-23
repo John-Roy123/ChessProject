@@ -6,6 +6,7 @@ import com.john.chess.Engine.Board.Move;
 import com.john.chess.Engine.Board.Move.MajorMove;
 import com.john.chess.Engine.Board.Move.AttackMove;
 import com.john.chess.Engine.Board.tile;
+import com.john.chess.Engine.Player.WhitePlayer;
 import com.john.chess.Engine.Team;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -28,7 +29,8 @@ public class King extends Piece{
     public Collection<Move> calculateLegalMoves(Board board) {
         
         final List<Move> legalMoves = new ArrayList<>();
-        
+
+
         for(final int offSet : CANDIDATE_MOVE_COORD){
             final int destinationCoord;
             destinationCoord = this.piecePosition + offSet;
@@ -42,7 +44,8 @@ public class King extends Piece{
                 if(!destinationTile.isFull()){
                     legalMoves.add(new MajorMove(board, this, destinationCoord));
                     //checks if destination already has a piece, and it not then moves piece to tile
-                }else{
+                }
+                else{
                     final Piece pieceOnTile = destinationTile.getPiece();
                     final Team pieceTeam = pieceOnTile.getPieceTeam();
                     if(this.pieceTeam != pieceTeam){
